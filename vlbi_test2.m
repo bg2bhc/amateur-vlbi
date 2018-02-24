@@ -24,7 +24,22 @@ for j=1:(length(s_lp_harbin_slice)/10000-1)
     freq(j) = corr_max_freq(index(j));
 end
 
-t=(3000+(1:(length(s_lp_harbin_slice)/10000-1))*10000-1)/250000;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+r_harbin=xlsread('r_harbin');
+r_chongqing=xlsread('r_chongqing');
+
+delta_r_exp = r_chongqing - r_harbin;
+t_exp = (0:300)*0.1;
+
+v_harbin = (r_harbin(1:300) - r_harbin(2:301))/0.1;
+v_chongqing = (r_chongqing(1:300) - r_chongqing(2:301))/0.1;
+delta_f = (v_chongqing - v_harbin)/3e5*437.2125e3;
+t_exp1 = (0:299)*0.1;
+
+t=(3000+(1:(length(s_lp_harbin_slice)/10000-1))*10000-1)/250000+0.166730;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 figure
 subplot(3,1,1)
@@ -32,11 +47,11 @@ plot(t, amp)
 xlabel('Time / s')
 ylabel('Correlation Amplitude')
 subplot(3,1,2)
-plot(t, (index-2001)/250000*3e5)
+plot(t, (index-2001)/250000*3e5, t_exp, delta_r_exp)
 xlabel('Time / s')
 ylabel('¦¤r / km')
 subplot(3,1,3)
-plot(t, freq/2/pi*250)
+plot(t, freq/2/pi*250, t_exp1, delta_f)
 xlabel('Time / s')
 ylabel('¦¤f / kHz')
 axis([0,30,16,17])
